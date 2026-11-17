@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Mitzvah de Noam Moshe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Montserrat:wght@800;900&family=Allura&family=Frank+Ruhl+Libre:wght@500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============ PALETTE (inspirée du save the date) ============ */
+        :root {
+            --cream: #f8efe5;
+            --paper: #fbf5ee;
+            --navy: #3e4775;
+            --gold: #c9a84c;
+            --gold-light: #e2c97a;
+            --teal: #1f5f78;
+            --teal-light: #4a9bb8;
+            --text: #4a4f6a;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; overflow-x: hidden; }
+        body {
+            font-family: 'Josefin Sans', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+        body.is-loading { overflow: hidden; }
+        .he { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; direction: rtl; unicode-bidi: isolate; }
+        .script { font-family: 'Allura', cursive; font-weight: 400; }
+        .hidden { display: none !important; }
+
+        /* Nom en lettres "peintes" bleu et doré */
+        .painted {
+            font-family: 'Montserrat', 'Arial Black', sans-serif;
+            font-weight: 900; text-transform: uppercase; line-height: 0.95; letter-spacing: 0.01em;
+            background:
+                radial-gradient(circle at 22% 30%, var(--gold-light) 0 7%, transparent 8%),
+                radial-gradient(circle at 68% 18%, var(--gold) 0 9%, transparent 10%),
+                radial-gradient(circle at 82% 70%, var(--gold-light) 0 6%, transparent 7%),
+                radial-gradient(circle at 40% 80%, var(--gold) 0 5%, transparent 6%),
+                repeating-linear-gradient(100deg, var(--teal) 0 6px, #2a7593 6px 11px, #164a60 11px 15px, var(--teal-light) 15px 18px);
+            -webkit-background-clip: text; background-clip: text;
+            color: var(--teal);
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ============ PRELOADER ============ */
+        #global-loader {
+            position: fixed; inset: 0; background: var(--cream); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease-out;
+        }
+        .loader-spinner {
+            width: 44px; height: 44px; border-radius: 50%;
+            border: 3px solid rgba(201, 168, 76, 0.25); border-top-color: var(--gold);
+            animation: spin 1s linear infinite; margin-bottom: 16px;
+        }
+        .loader-text { color: var(--gold); letter-spacing: 4px; font-size: 12px; text-transform: uppercase; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ============ ENVELOPPE ============ */
+        #start-screen {
+            position: fixed; inset: 0; z-index: 50;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1s; background: var(--cream);
+        }
+        #instruction-text { text-align: center; margin-bottom: 40px; transition: opacity 0.4s; }
+        #instruction-text p { color: var(--navy); font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; margin: 12px 0 0; }
+
+        .monogram {
+            width: 86px; height: 86px; margin: 0 auto; border-radius: 50%;
+            border: 1px solid var(--gold); background: var(--paper);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--gold); font-family: 'Allura', cursive; font-size: 2.6rem;
+        }
+        .monogram img, .seal img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+
+        .envelope-container {
+            perspective: 1500px; cursor: pointer; position: relative; z-index: 10;
+            width: 550px; height: 380px; transition: transform 0.3s ease; flex-shrink: 0;
+        }
+        @media (max-width: 768px) { .envelope-container { transform: scale(0.7); } }
+        @media (max-width: 550px) { .envelope-container { transform: scale(0.58); margin: -80px 0; } }
+        @media (max-width: 380px) { .envelope-container { transform: scale(0.5); } }
+        @media (min-width: 769px) { .envelope-container:hover { transform: scale(1.02); } }
+
+        .envelope {
+            position: relative; width: 100%; height: 100%; border-radius: 4px;
+            background: #1d4f66; box-shadow: 0 25px 50px -12px rgba(30, 50, 80, 0.35);
+        }
+        .envelope-back { position: absolute; inset: 0; border-radius: 4px; z-index: 1; background: #17435a; }
+        .card-preview {
+            position: absolute; bottom: 5px; left: 25px; right: 25px; height: 360px; z-index: 2;
+            background: var(--paper); border-radius: 6px; overflow: hidden;
+            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        }
+        .card-preview .frame { position: absolute; inset: 12px; border: 1px solid var(--gold); }
+        .card-preview .painted { font-size: 3.6rem; }
+        .card-preview.slide-out { transform: translateY(-320px); }
+        .card-preview.highlight { transform: translateY(-420px) scale(1.2); z-index: 50; box-shadow: 0 30px 60px rgba(0,0,0,0.25); }
+        .pocket {
+            position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: 0 0 4px 4px;
+            clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+            background: linear-gradient(135deg, #22607b 30%, #164058 100%);
+        }
+        .flap {
+            position: absolute; top: 0; left: 0; width: 100%; height: 220px; z-index: 5;
+            transform-origin: top; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.8s;
+            background: linear-gradient(to bottom, #2a6d8a 0%, #1a4a62 100%);
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            display: flex; justify-content: center; align-items: flex-start;
+        }
+        .flap.open { transform: rotateX(180deg); z-index: 1; }
+        .flap.open .seal { opacity: 0; }
+        .seal {
+            margin-top: 70px; width: 82px; height: 82px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, var(--gold-light), var(--gold));
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-family: 'Allura', cursive; font-size: 2.4rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: opacity 0.3s;
+        }
+
+        /* ============ INVITATION ============ */
+        #invitation-full { opacity: 0; transform: translateY(30px); transition: opacity 1s ease, transform 1s ease-out; display: none; }
+        #invitation-full.visible { display: block; }
+        #invitation-full.fade-in-active { opacity: 1; transform: translateY(0); }
+
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 48px 16px; position: relative; }
+        .hero::before, .hero::after {
+            content: ""; position: absolute; bottom: 0; width: 70px; height: 45%; opacity: 0.55; pointer-events: none;
+            background: repeating-linear-gradient(90deg, var(--teal) 0 3px, transparent 3px 7px, var(--teal-light) 7px 9px, transparent 9px 14px);
+            -webkit-mask-image: linear-gradient(to top, #000 10%, transparent);
+                    mask-image: linear-gradient(to top, #000 10%, transparent);
+        }
+        .hero::before { left: 0; }
+        .hero::after { right: 0; }
+
+        .card {
+            position: relative; z-index: 1; width: 100%; max-width: 760px; text-align: center;
+            background: var(--paper); padding: 56px 28px 48px;
+            border: 1px solid var(--gold); outline: 1px solid var(--gold); outline-offset: 8px;
+            box-shadow: 0 20px 45px -15px rgba(30, 50, 80, 0.25);
+        }
+        @media (min-width: 768px) { .card { padding: 64px 56px 56px; } }
+        .bsd { position: absolute; top: 18px; right: 22px; font-size: 13px; color: var(--navy); }
+
+        .verse-he { color: var(--gold); font-size: 1.7rem; font-weight: 700; margin: 0; }
+        .verse-fr { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; margin: 6px 0 0; }
+
+        .parents { color: var(--navy); font-size: 1.05rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; margin: 36px 0 8px; }
+        .lead { color: var(--navy); font-size: 1.2rem; font-weight: 300; margin: 0 0 18px; line-height: 1.5; }
+        .name { font-size: clamp(3.4rem, 15vw, 7.5rem); margin: 0; }
+        .sub { color: var(--navy); font-size: 1.25rem; font-weight: 300; margin: 18px 0 0; }
+
+        .date-block { margin: 34px 0 0; }
+        .date-block .script { color: var(--gold); font-size: clamp(3rem, 11vw, 5rem); line-height: 0.8; display: block; }
+        .date-big { color: var(--navy); font-weight: 300; font-size: clamp(2.4rem, 9vw, 3.8rem); letter-spacing: 0.04em; margin: 0; }
+        .date-he { color: var(--navy); font-size: 1.15rem; margin: 2px 0 0; }
+
+        .events { margin-top: 40px; border-top: 1px solid var(--gold-light); border-bottom: 1px solid var(--gold-light); }
+        .event { padding: 36px 8px; position: relative; }
+        .event + .event::before {
+            content: ""; position: absolute; top: 0; left: 50%; width: 60px; height: 1px; background: var(--gold-light); transform: translateX(-50%);
+        }
+        .event h3 { font-family: 'Josefin Sans', sans-serif; color: var(--navy); font-size: 1.35rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 14px; }
+        .event .when { color: var(--navy); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 0; }
+        .event .time { color: var(--gold); font-size: 2.6rem; margin: 2px 0 6px; line-height: 1; }
+        .event .place { font-style: italic; margin: 10px 0 2px; }
+        .event .address { font-size: 0.9rem; opacity: 0.8; margin: 0; }
+        .event .note { margin: 14px auto 0; max-width: 460px; line-height: 1.5; }
+
+        .closing { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--navy); font-size: 1.35rem; line-height: 1.45; margin: 36px auto 0; max-width: 560px; }
+        .rsvp-by { margin-top: 26px; font-size: 0.9rem; opacity: 0.75; }
+
+        #scroll-arrow {
+            position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 40;
+            width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--gold); background: var(--paper); border: 1px solid var(--gold);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12); transition: opacity 0.5s; animation: bounce 1.6s infinite;
+            text-decoration: none; font-size: 20px;
+        }
+        @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -8px); } }
+
+        /* ============ RSVP ============ */
+        #rsvp { background: var(--paper); border-top: 1px solid var(--gold); padding: 72px 16px; }
+        .rsvp-inner { max-width: 1080px; margin: 0 auto; }
+        .rsvp-title { text-align: center; margin-bottom: 40px; }
+        .rsvp-title h2 { font-family: 'Allura', cursive; font-weight: 400; color: var(--gold); font-size: clamp(3rem, 10vw, 4.2rem); margin: 0; line-height: 1; }
+        .rsvp-title p { color: var(--navy); margin: 8px 0 0; font-size: 1.1rem; font-weight: 300; }
+        .rsvp-grid { display: grid; gap: 32px; align-items: start; }
+        @media (min-width: 900px) { .rsvp-grid { grid-template-columns: 1fr 1fr; } }
+
+        .panel { background: #fff; border-radius: 8px; padding: 32px 24px; box-shadow: 0 15px 35px -15px rgba(30, 50, 80, 0.25); }
+        @media (min-width: 768px) { .panel { padding: 40px; } }
+        .field { margin-bottom: 20px; }
+        .field label, .group-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8a8ea3; margin-bottom: 6px; }
+        .form-input {
+            width: 100%; padding: 12px 14px; border-radius: 6px; font: inherit; color: var(--text);
+            border: 1px solid #e3dccf; background: #fcfaf6; transition: all 0.3s;
+        }
+        .form-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.18); }
+        textarea.form-input { min-height: 96px; resize: vertical; }
+
+        .choice { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid #e3dccf; border-radius: 8px; background: #fcfaf6; cursor: pointer; margin-bottom: 10px; }
+        .choice input { width: 18px; height: 18px; accent-color: var(--teal); }
+        .choice span { color: var(--navy); font-weight: 600; }
+        #events-selection { margin: 8px 0 16px 8px; padding-left: 18px; border-left: 2px solid var(--gold); overflow: hidden; transition: all 0.3s; max-height: 400px; }
+        #events-selection .hint { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin: 6px 0 10px; }
+        .check { display: flex; gap: 12px; align-items: flex-start; padding: 6px 0; cursor: pointer; }
+        .check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--teal); }
+        .check b { display: block; color: var(--navy); font-size: 0.95rem; }
+        .check small { color: #9a9db0; }
+
+        .btn {
+            width: 100%; padding: 16px; margin-top: 8px; border: 0; border-radius: 6px; cursor: pointer;
+            background: var(--navy); color: #fff; font: inherit; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; font-size: 13px;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #2f3760; }
+        .btn:disabled { opacity: 0.7; cursor: default; }
+        #success-message { margin-top: 20px; padding: 14px; border-radius: 6px; background: #eef6f0; color: #275c3b; border: 1px solid #cfe5d6; text-align: center; font-weight: 600; }
+
+        .map { position: relative; min-height: 420px; border-radius: 8px; overflow: hidden; border: 1px solid var(--gold); box-shadow: 0 15px 35px -15px rgba(30, 50, 80, 0.25); }
+        @media (min-width: 900px) { .map { min-height: 100%; height: 100%; } }
+        .map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .map-card { position: absolute; left: 16px; right: 16px; bottom: 16px; background: #fff; padding: 16px 18px; border-radius: 6px; border-left: 4px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .map-card b { color: var(--navy); display: block; }
+        .map-card span { font-size: 0.9rem; }
+        .map-card a { display: inline-block; margin-top: 8px; color: var(--teal); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; }
+
+        footer { background: var(--navy); color: var(--gold-light); text-align: center; padding: 34px 16px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; }
+    </style>
+</head>
+<body class="is-loading">
+
+    <div id="global-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Chargement...</div>
+    </div>
+
+    <!-- ===== ÉCRAN D'ACCUEIL : ENVELOPPE ===== -->
+    <section id="start-screen">
+        <div id="instruction-text">
+            <div class="monogram">NM</div>
+            <p>Ouvrez l'invitation</p>
+        </div>
+
+        <div class="envelope-container" onclick="openEnvelope()">
+            <div class="envelope">
+                <div class="envelope-back"></div>
+                <div class="flap" id="flap"><div class="seal">NM</div></div>
+                <div class="card-preview" id="card-preview">
+                    <div class="frame"></div>
+                    <p style="margin:0 0 10px; color:var(--navy); font-size:12px; letter-spacing:.3em; text-transform:uppercase;">Bar Mitzvah</p>
+                    <div class="painted">Noam<br>Moshe</div>
+                    <p style="margin:14px 0 0; color:var(--navy); font-size:1.3rem; font-weight:300;">04.03.2027</p>
+                </div>
+                <div class="pocket"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== INVITATION ===== -->
+    <main id="invitation-full">
+        <section class="hero">
+            <div class="card">
+                <span class="bsd he">בס"ד</span>
+
+                <p class="verse-he he">וַיַּקְהֵל מֹשֶׁה אֶת כָּל עֲדַת בְּנֵי יִשְׂרָאֵל</p>
+                <p class="verse-fr">« Et Moshé rassembla toute la communauté des enfants d'Israël... »</p>
+
+                <p class="parents">Deborah et David Sellem</p>
+                <p class="lead">ont la joie de vous convier à la Bar Mitzvah de leur fils</p>
+
+                <h1 class="name painted">Noam<br>Moshe</h1>
+                <p class="sub">qui montera à la Torah à Jérusalem</p>
+
+                <div class="date-block">
+                    <span class="script">Save the date</span>
+                    <p class="date-big">04.03.2027</p>
+                    <p class="date-he he">כ"ה באדר א' ה'תשפ"ז</p>
+                </div>
+
+                <div class="events">
+                    <div class="event">
+                        <h3>Mise des Téfilines &amp; Alya à la Torah</h3>
+                        <p class="when">Jeudi 4 mars 2027</p>
+                        <p class="time script">9h00</p>
+                        <p class="place">Synagogue Hechal Avraham du Rav Abergel</p>
+                        <p class="address">4 Rehov Shimon, Baka, Jérusalem</p>
+                    </div>
+
+                    <!-- Visible uniquement avec le lien ?soiree=oui -->
+                    <div class="event hidden" id="seouda-event">
+                        <h3>Seouda musicale</h3>
+                        <p class="when">Jeudi 4 mars 2027 au soir</p>
+                        <p class="time script">[HEURE]</p>
+                        <p class="place">[NOM DU LIEU]</p>
+                        <p class="address">[ADRESSE]</p>
+                        <p class="note">On continuera tous ensemble autour d'une Seouda musicale, dans la joie, la bonne humeur et l'ambiance.</p>
+                    </div>
+                </div>
+
+                <p class="closing">Famille, amis, on compte sur votre présence à nos côtés pour voir notre fils vivre sa Paracha.</p>
+                <p class="rsvp-by">Merci de répondre avant le 4 février 2027</p>
+            </div>
+
+            <a id="scroll-arrow" href="#rsvp" aria-label="Aller au formulaire de réponse">&#8964;</a>
+        </section>
+
+        <!-- ===== RSVP ===== -->
+        <section id="rsvp">
+            <div class="rsvp-inner">
+                <div class="rsvp-title">
+                    <h2>Confirmation de présence</h2>
+                    <p>Merci de nous indiquer votre réponse</p>
+                </div>
+
+                <div class="rsvp-grid">
+                    <div class="panel">
+                        <form name="submit-to-google-sheet" onsubmit="submitForm(event)">
+                            <div class="field">
+                                <label for="lastname">Nom</label>
+                                <input type="text" id="lastname" name="Nom" required class="form-input" placeholder="Votre nom de famille">
+                            </div>
+                            <div class="field">
+                                <label for="firstname">Prénom</label>
+                                <input type="text" id="firstname" name="Prénom" required class="form-input" placeholder="Votre prénom">
+                            </div>
+                            <div class="field">
+                                <label for="guests">Nombre de personnes</label>
+                                <select id="guests" name="Invités" class="form-input">
+                                    <option value="1">1 personne</option>
+                                    <option value="2">2 personnes</option>
+                                    <option value="3">3 personnes</option>
+                                    <option value="4">4 personnes</option>
+                                    <option value="5">5 personnes</option>
+                                    <option value="6">6 personnes</option>
+                                    <option value="7">7 personnes</option>
+                                    <option value="8">8 personnes</option>
+                                    <option value="9">9 personnes</option>
+                                    <option value="10">10 personnes</option>
+                                </select>
+                            </div>
+
+                            <span class="group-label">Votre réponse</span>
+                            <label class="choice">
+                                <input type="radio" name="Présence" value="Présent" checked onchange="toggleEvents(true)">
+                                <span>Je serai présent(e)</span>
+                            </label>
+
+                            <div id="events-selection">
+                                <p class="hint">Je participerai à :</p>
+                                <label class="check">
+                                    <input type="checkbox" name="Alya" value="Oui" checked>
+                                    <span><b>Mise des Téfilines &amp; Alya à la Torah</b><small>Jeudi 4 mars, 9h00</small></span>
+                                </label>
+                                <label class="check hidden" id="seouda-option">
+                                    <input type="checkbox" name="Seouda" value="Oui" checked disabled>
+                                    <span><b>Seouda musicale</b><small>Jeudi 4 mars au soir</small></span>
+                                </label>
+                            </div>
+
+                            <label class="choice">
+                                <input type="radio" name="Présence" value="Absent" onchange="toggleEvents(false)">
+                                <span style="font-weight:400;">Je ne pourrai pas être présent(e)</span>
+                            </label>
+
+                            <div class="field" style="margin-top:20px;">
+                                <label for="message">Un petit mot (facultatif)</label>
+                                <textarea id="message" name="Message" class="form-input" placeholder="Votre message pour Noam Moshe et sa famille"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn">Confirmer ma réponse</button>
+                        </form>
+                        <div id="success-message" class="hidden">Merci, votre réponse a bien été enregistrée !</div>
+                    </div>
+
+                    <div class="map">
+                        <iframe loading="lazy" src="https://maps.google.com/maps?q=Hechal+Avraham+4+Shimon+Street+Baka+Jerusalem&t=&z=15&ie=UTF8&iwloc=&output=embed" title="Carte de la synagogue"></iframe>
+                        <div class="map-card">
+                            <b>Synagogue Hechal Avraham</b>
+                            <span>4 Rehov Shimon, Baka, Jérusalem</span><br>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Hechal+Avraham+4+Shimon+Street+Baka+Jerusalem" target="_blank" rel="noopener">Voir l'itinéraire &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>Bar Mitzvah de Noam Moshe · 2027</footer>
+    </main>
+
+    <script>
+        // URL du script Google Apps Script qui envoie les réponses dans le Google Sheet
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxWUcgZMF-gWY5RjOaI-nMSUllI2KP7NU5iYSUrd5r_ntj_WxMA5mAkV6vsFJ9_6em6/exec';
+
+        // --- Invités de la soirée : ajouter ?soiree=oui à la fin du lien ---
+        const withSeouda = new URLSearchParams(window.location.search).get('soiree') === 'oui';
+
+        function setupInvitationMode() {
+            const form = document.forms['submit-to-google-sheet'];
+            if (withSeouda) {
+                document.getElementById('seouda-event').classList.remove('hidden');
+                document.getElementById('seouda-option').classList.remove('hidden');
+                document.querySelector('#seouda-option input').disabled = false;
+            } else {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden'; hidden.name = 'Seouda'; hidden.value = 'Non invité';
+                form.appendChild(hidden);
+            }
+        }
+        setupInvitationMode();
+
+        // --- Preloader ---
+        const hideLoader = () => {
+            const loader = document.getElementById('global-loader');
+            if (loader && loader.style.opacity !== '0') {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; document.body.classList.remove('is-loading'); }, 800);
+            }
+        };
+        window.addEventListener('load', hideLoader);
+        setTimeout(hideLoader, 3000);
+
+        function toggleEvents(isPresent) {
+            const container = document.getElementById('events-selection');
+            container.style.maxHeight = isPresent ? '400px' : '0';
+            container.style.opacity = isPresent ? '1' : '0';
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.disabled = !isPresent || (cb.name === 'Seouda' && !withSeouda);
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            const arrow = document.getElementById('scroll-arrow');
+            const hide = window.scrollY > 300;
+            arrow.style.opacity = hide ? '0' : '1';
+            arrow.style.pointerEvents = hide ? 'none' : 'auto';
+        });
+
+        function openEnvelope() {
+            const card = document.getElementById('card-preview');
+            const startScreen = document.getElementById('start-screen');
+            const main = document.getElementById('invitation-full');
+
+            document.getElementById('instruction-text').style.opacity = '0';
+            document.getElementById('flap').classList.add('open');
+            setTimeout(() => card.classList.add('slide-out'), 600);
+            setTimeout(() => card.classList.add('highlight'), 1400);
+            setTimeout(() => {
+                startScreen.style.opacity = '0';
+                main.classList.add('visible');
+                setTimeout(() => { main.classList.add('fade-in-active'); window.scrollTo(0, 0); }, 100);
+                setTimeout(() => { startScreen.style.display = 'none'; }, 1000);
+            }, 2500);
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            const form = document.forms['submit-to-google-sheet'];
+            const btn = form.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Envoi en cours...';
+            btn.disabled = true;
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(() => {
+                    btn.innerText = 'Réponse envoyée';
+                    document.getElementById('success-message').classList.remove('hidden');
+                    form.reset();
+                    toggleEvents(true);
+                })
+                .catch(error => {
+                    console.error('Erreur :', error.message);
+                    btn.innerText = 'Erreur, réessayez';
+                    btn.disabled = false;
+                    setTimeout(() => { btn.innerText = originalText; }, 3000);
+                });
+        }
+    </script>
+</body>
+</html>
