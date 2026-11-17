@@ -27,7 +27,7 @@ Total de personnes par événement : `=SUMIFS(D:D; F:F; "Oui")` pour l'Alya, `=S
 
 ## 3. Deux liens d'invitation
 - **Lien normal** (matin uniquement) : l'adresse du site telle quelle. Le Sheet indique « Non invité » pour la Seouda.
-- **Lien soirée** (les 80 invités de la Seouda) : ajouter `?soiree=oui` à la fin de l'adresse.
+- **Lien soirée** (les 80 invités de la grande soirée de fête) : ajouter `?soiree=oui` à la fin de l'adresse.
 
 ## Colonnes du Sheet (onglet Réponses)
 Date · Nom · Prénom · Invités · Présence · Alya · Seouda · Message
