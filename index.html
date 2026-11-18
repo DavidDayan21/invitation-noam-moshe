@@ -6,7 +6,7 @@
     <title>Bar Mitzvah de Noam Moshe</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@800;900&family=Allison&family=Allura&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@800;900&family=Allison&family=Allura&family=Frank+Ruhl+Libre:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
         /* ============ PALETTE (inspirée du save the date) ============ */
@@ -186,6 +186,37 @@
         .closing { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--navy); font-size: 1.35rem; line-height: 1.45; margin: 36px auto 0; max-width: 560px; }
         .rsvp-by { margin-top: 26px; font-size: 0.9rem; opacity: 0.75; }
 
+
+        /* ============ LANGUE : bouton et version hébreu ============ */
+        #lang-toggle {
+            position: fixed; top: 16px; right: 16px; z-index: 10000;
+            height: 40px; min-width: 52px; padding: 0 14px; border-radius: 20px; cursor: pointer;
+            background: var(--paper); border: 1px solid var(--gold); color: var(--navy);
+            font-family: 'Frank Ruhl Libre', 'Cormorant Garamond', serif; font-size: 15px; font-weight: 700;
+            box-shadow: 0 4px 12px rgba(30, 50, 80, 0.15); transition: transform 0.2s;
+        }
+        #lang-toggle:active { transform: scale(0.94); }
+        #lang-toggle .sep { color: var(--gold); font-weight: 400; margin: 0 6px; }
+        #lang-toggle .off { color: #b7b9c7; font-weight: 400; }
+        html[lang="he"] body,
+        html[lang="he"] .closing, html[lang="he"] .event h3, html[lang="he"] .rsvp-title h2,
+        html[lang="he"] .parents, html[lang="he"] .btn, html[lang="he"] .form-input,
+        html[lang="he"] .verse-fr { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; }
+        html[lang="he"] .event h3, html[lang="he"] .event .when, html[lang="he"] .field label,
+        html[lang="he"] .group-label, html[lang="he"] #events-selection .hint, html[lang="he"] footer,
+        html[lang="he"] #instruction-text p, html[lang="he"] .loader-text, html[lang="he"] .btn,
+        html[lang="he"] .map-card a, html[lang="he"] .preview-label { letter-spacing: 0.02em; }
+        html[lang="he"] .event h3 { font-size: 1.45rem; font-weight: 700; }
+        html[lang="he"] .parents { font-size: 2.3rem; font-weight: 700; line-height: 1.25; }
+        html[lang="he"] .closing { font-style: normal; font-size: 1.25rem; }
+        html[lang="he"] .rsvp-title h2 { font-size: 2.6rem; font-weight: 700; line-height: 1.2; }
+        html[lang="he"] .lead, html[lang="he"] .sub { font-size: 1.3rem; }
+        html[lang="he"] .verse-fr:empty { display: none; }
+        html[lang="he"] .ltr { direction: ltr; unicode-bidi: isolate; }
+        @media (max-width: 550px) { html[lang="he"] .parents { font-size: 1.9rem; } }
+        #events-selection { margin-inline-start: 8px !important; margin-left: 0; padding-left: 0; border-left: 0; padding-inline-start: 18px; border-inline-start: 2px solid var(--gold); }
+        .map-card { border-left: 0 !important; border-inline-start: 4px solid var(--gold); }
+
         /* ============ MUSIQUE : bouton son ============ */
         #music-toggle {
             position: fixed; right: 18px; bottom: 18px; z-index: 60;
@@ -264,16 +295,19 @@
 </head>
 <body class="is-loading">
 
+    <!-- ===== BOUTON LANGUE ===== -->
+    <button id="lang-toggle" type="button" onclick="toggleLang()" aria-label="עברית"></button>
+
     <div id="global-loader">
         <div class="loader-spinner"></div>
-        <div class="loader-text">Chargement...</div>
+        <div class="loader-text" data-he="טוען...">Chargement...</div>
     </div>
 
     <!-- ===== ÉCRAN D'ACCUEIL : ENVELOPPE ===== -->
     <section id="start-screen">
         <div id="instruction-text">
             <img class="logo-top" src="img/logo.jpg" alt="Bar Mitsva Noam Moshe">
-            <p>Ouvrez l'invitation</p>
+            <p data-he="פתחו את ההזמנה">Ouvrez l'invitation</p>
         </div>
 
         <div class="envelope-container" onclick="openEnvelope()">
@@ -282,7 +316,7 @@
                 <div class="flap" id="flap"><div class="seal seal-logo"><img src="img/logo.jpg" alt=""></div></div>
                 <div class="card-preview" id="card-preview">
                     <div class="frame"></div>
-                    <p style="margin:0 0 10px; color:var(--navy); font-size:12px; letter-spacing:.3em; text-transform:uppercase;">Bar Mitzvah</p>
+                    <p style="margin:0 0 10px; color:var(--navy); font-size:12px; letter-spacing:.3em; text-transform:uppercase;" class="preview-label" data-he="בר מצווה">Bar Mitzvah</p>
                     <img src="img/noam-moshe.png" alt="Noam Moshe" style="width:78%; height:auto;">
                     <p style="margin:14px 0 0; color:var(--navy); font-size:1.3rem; font-weight:300;">04.03.2027</p>
                 </div>
@@ -298,13 +332,13 @@
                 <span class="bsd he">בס"ד</span>
 
                 <p class="verse-he he">וַיַּקְהֵל מֹשֶׁה אֶת כָּל עֲדַת בְּנֵי יִשְׂרָאֵל</p>
-                <p class="verse-fr">« Et Moshé rassembla toute la communauté des enfants d'Israël... »</p>
+                <p class="verse-fr" data-he="">« Et Moshé rassembla toute la communauté des enfants d'Israël... »</p>
 
-                <p class="parents">Deborah et David Sellem</p>
-                <p class="lead">ont la joie de vous convier à la Bar Mitzvah de leur fils</p>
+                <p class="parents" data-he="דבורה ודוד סלם">Deborah et David Sellem</p>
+                <p class="lead" data-he="שמחים להזמינכם לבר המצווה של בנם">ont la joie de vous convier à la Bar Mitzvah de leur fils</p>
 
                 <h1 class="name"><img src="img/noam-moshe.png" alt="Noam Moshe"></h1>
-                <p class="sub">qui montera à la Torah à Jérusalem</p>
+                <p class="sub" data-he="שיעלה לתורה בירושלים">qui montera à la Torah à Jérusalem</p>
 
                 <div class="date-block">
                     <img class="std" src="img/save-the-date.png" alt="Save the date">
@@ -314,107 +348,107 @@
 
                 <div class="events">
                     <div class="event">
-                        <h3>Alya à la Torah</h3>
-                        <p class="when">Jeudi 4 mars 2027</p>
-                        <p class="time script">9h00</p>
-                        <p class="place">Synagogue Hechal Avraham du Rav Abergel</p>
-                        <p class="address">4 Rehov Shimon, Baka, Jérusalem</p>
+                        <h3 data-he="עלייה לתורה">Alya à la Torah</h3>
+                        <p class="when" data-he="יום חמישי, 4 במרץ 2027">Jeudi 4 mars 2027</p>
+                        <p class="time script" data-he="9:00">9h00</p>
+                        <p class="place" data-he="בית הכנסת היכל אברהם של הרב אברג'ל">Synagogue Hechal Avraham du Rav Abergel</p>
+                        <p class="address" data-he="רחוב שמעון 4, בקעה, ירושלים">4 Rehov Shimon, Baka, Jérusalem</p>
                     </div>
 
                     <!-- Visible uniquement avec le lien ?soiree=oui -->
                     <div class="event hidden" id="seouda-event">
-                        <h3>La Bar Mitzvah Party de Noam Moshe</h3>
-                        <p class="when">Jeudi 4 mars 2027</p>
-                        <p style="margin:6px 0 0; font-style:italic;">à partir de</p>
-                        <p class="time script">19h30</p>
-                        <p class="place">Restaurant-salle Ofra</p>
-                        <p class="address">16 Rehov Ha-Aparsa, Talpiot, Jérusalem</p>
-                        <p class="note">Pour danser et se réunir !<br><b>Dress code : tenue de soirée cocktail obligatoire</b></p>
-                        <p class="note">Nous espérons de tout cœur que vous pourrez tous être réunis autour de nous pour partager ces moments précieux, remplis de joie, d'émotion et de bonheur familial.</p>
+                        <h3 data-he="מסיבת בר המצווה של נועם משה">La Bar Mitzvah Party de Noam Moshe</h3>
+                        <p class="when" data-he="יום חמישי, 4 במרץ 2027">Jeudi 4 mars 2027</p>
+                        <p style="margin:6px 0 0; font-style:italic;" data-he="החל מ-">à partir de</p>
+                        <p class="time script" data-he="19:30">19h30</p>
+                        <p class="place" data-he="מסעדת-אולם עפרה">Restaurant-salle Ofra</p>
+                        <p class="address" data-he="<span class=&quot;ltr&quot;>16 Rehov Ha-Aparsa</span>, תלפיות, ירושלים">16 Rehov Ha-Aparsa, Talpiot, Jérusalem</p>
+                        <p class="note" data-he="לרקוד ולחגוג יחד!<br><b>קוד לבוש: לבוש ערב / קוקטייל – חובה</b>">Pour danser et se réunir !<br><b>Dress code : tenue de soirée cocktail obligatoire</b></p>
+                        <p class="note" data-he="אנו מקווים מכל הלב שתוכלו כולכם להיות לצידנו ולחלוק איתנו את הרגעים היקרים האלה, המלאים בשמחה, בהתרגשות ובאושר משפחתי.">Nous espérons de tout cœur que vous pourrez tous être réunis autour de nous pour partager ces moments précieux, remplis de joie, d'émotion et de bonheur familial.</p>
                     </div>
                 </div>
 
-                <p class="closing">Famille, amis, on compte sur votre présence à nos côtés pour voir notre fils vivre sa Paracha.<br>On continuera tous ensemble autour d'une Seouda musicale, dans la joie, la bonne humeur et l'ambiance.</p>
-                <p class="rsvp-by">Merci de répondre avant le 4 février 2027</p>
+                <p class="closing" data-he="משפחה, חברים, נשמח מאוד שתהיו לצידנו כשבננו יקרא בפרשת השבוע שלו.<br>נמשיך כולנו יחד בסעודה מוזיקלית, בשמחה, במצב רוח טוב ובאווירה נהדרת.">Famille, amis, on compte sur votre présence à nos côtés pour voir notre fils vivre sa Paracha.<br>On continuera tous ensemble autour d'une Seouda musicale, dans la joie, la bonne humeur et l'ambiance.</p>
+                <p class="rsvp-by" data-he="נא לאשר הגעה עד 4 בפברואר 2027">Merci de répondre avant le 4 février 2027</p>
             </div>
 
-            <a id="scroll-arrow" href="#rsvp" aria-label="Aller au formulaire de réponse">&#8964;</a>
+            <a id="scroll-arrow" href="#rsvp" aria-label="Aller au formulaire de réponse" data-he-aria="מעבר לטופס אישור ההגעה">&#8964;</a>
         </section>
 
         <!-- ===== RSVP ===== -->
         <section id="rsvp">
             <div class="rsvp-inner">
                 <div class="rsvp-title">
-                    <h2>Confirmation de présence</h2>
-                    <p>Merci de nous indiquer votre réponse</p>
+                    <h2 data-he="אישור הגעה">Confirmation de présence</h2>
+                    <p data-he="נשמח לדעת אם תגיעו">Merci de nous indiquer votre réponse</p>
                 </div>
 
                 <div class="rsvp-grid">
                     <div class="panel">
                         <form name="submit-to-google-sheet" onsubmit="submitForm(event)">
                             <div class="field">
-                                <label for="lastname">Nom</label>
-                                <input type="text" id="lastname" name="Nom" required class="form-input" placeholder="Votre nom de famille">
+                                <label for="lastname" data-he="שם משפחה (נא לכתוב באנגלית)">Nom</label>
+                                <input type="text" id="lastname" name="Nom" required class="form-input" placeholder="Votre nom de famille" data-he-ph="Family name" dir="auto">
                             </div>
                             <div class="field">
-                                <label for="firstname">Prénom</label>
-                                <input type="text" id="firstname" name="Prénom" required class="form-input" placeholder="Votre prénom">
+                                <label for="firstname" data-he="שם פרטי (נא לכתוב באנגלית)">Prénom</label>
+                                <input type="text" id="firstname" name="Prénom" required class="form-input" placeholder="Votre prénom" data-he-ph="First name" dir="auto">
                             </div>
                             <div class="field">
-                                <label for="guests">Nombre de personnes</label>
+                                <label for="guests" data-he="מספר משתתפים">Nombre de personnes</label>
                                 <select id="guests" name="Invités" class="form-input">
-                                    <option value="1">1 personne</option>
-                                    <option value="2">2 personnes</option>
-                                    <option value="3">3 personnes</option>
-                                    <option value="4">4 personnes</option>
-                                    <option value="5">5 personnes</option>
-                                    <option value="6">6 personnes</option>
-                                    <option value="7">7 personnes</option>
-                                    <option value="8">8 personnes</option>
-                                    <option value="9">9 personnes</option>
-                                    <option value="10">10 personnes</option>
+                                    <option value="1" data-he="משתתף אחד">1 personne</option>
+                                    <option value="2" data-he="2 משתתפים">2 personnes</option>
+                                    <option value="3" data-he="3 משתתפים">3 personnes</option>
+                                    <option value="4" data-he="4 משתתפים">4 personnes</option>
+                                    <option value="5" data-he="5 משתתפים">5 personnes</option>
+                                    <option value="6" data-he="6 משתתפים">6 personnes</option>
+                                    <option value="7" data-he="7 משתתפים">7 personnes</option>
+                                    <option value="8" data-he="8 משתתפים">8 personnes</option>
+                                    <option value="9" data-he="9 משתתפים">9 personnes</option>
+                                    <option value="10" data-he="10 משתתפים">10 personnes</option>
                                 </select>
                             </div>
 
-                            <span class="group-label">Votre réponse</span>
+                            <span class="group-label" data-he="התשובה שלכם">Votre réponse</span>
                             <label class="choice">
                                 <input type="radio" name="Présence" value="Présent" checked onchange="toggleEvents(true)">
-                                <span>Je serai présent(e)</span>
+                                <span data-he="אני מגיע/ה">Je serai présent(e)</span>
                             </label>
 
                             <div id="events-selection">
-                                <p class="hint">Je participerai à :</p>
+                                <p class="hint" data-he="אשתתף ב:">Je participerai à :</p>
                                 <label class="check">
                                     <input type="checkbox" name="Alya" value="Oui" checked>
-                                    <span><b>Alya à la Torah</b><small>Jeudi 4 mars, 9h00</small></span>
+                                    <span data-he="<b>עלייה לתורה</b><small>יום חמישי, 4 במרץ, 9:00</small>"><b>Alya à la Torah</b><small>Jeudi 4 mars, 9h00</small></span>
                                 </label>
                                 <label class="check hidden" id="seouda-option">
                                     <input type="checkbox" name="Seouda" value="Oui" checked disabled>
-                                    <span><b>La Bar Mitzvah Party de Noam Moshe</b><small>Jeudi 4 mars, à partir de 19h30</small></span>
+                                    <span data-he="<b>מסיבת בר המצווה של נועם משה</b><small>יום חמישי, 4 במרץ, החל מ-19:30</small>"><b>La Bar Mitzvah Party de Noam Moshe</b><small>Jeudi 4 mars, à partir de 19h30</small></span>
                                 </label>
                             </div>
 
                             <label class="choice">
                                 <input type="radio" name="Présence" value="Absent" onchange="toggleEvents(false)">
-                                <span style="font-weight:400;">Je ne pourrai pas être présent(e)</span>
+                                <span style="font-weight:400;" data-he="לא אוכל להגיע">Je ne pourrai pas être présent(e)</span>
                             </label>
 
                             <div class="field" style="margin-top:20px;">
-                                <label for="message">Un petit mot (facultatif)</label>
-                                <textarea id="message" name="Message" class="form-input" placeholder="Votre message pour Noam Moshe et sa famille"></textarea>
+                                <label for="message" data-he="ברכה אישית (לא חובה)">Un petit mot (facultatif)</label>
+                                <textarea id="message" name="Message" class="form-input" placeholder="Votre message pour Noam Moshe et sa famille" data-he-ph="הברכה שלכם לנועם משה ולמשפחתו" dir="auto"></textarea>
                             </div>
 
-                            <button type="submit" class="btn">Confirmer ma réponse</button>
+                            <button type="submit" class="btn" data-he="שליחת התשובה">Confirmer ma réponse</button>
                         </form>
-                        <div id="success-message" class="hidden">Merci, votre réponse a bien été enregistrée !</div>
+                        <div id="success-message" class="hidden" data-he="תודה, התשובה שלכם התקבלה!">Merci, votre réponse a bien été enregistrée !</div>
                     </div>
 
                     <div class="map">
                         <iframe loading="lazy" src="https://maps.google.com/maps?q=Hechal+Avraham+4+Shimon+Street+Baka+Jerusalem&t=&z=15&ie=UTF8&iwloc=&output=embed" title="Carte de la synagogue"></iframe>
                         <div class="map-card">
-                            <b>Synagogue Hechal Avraham</b>
-                            <span>4 Rehov Shimon, Baka, Jérusalem</span><br>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Hechal+Avraham+4+Shimon+Street+Baka+Jerusalem" target="_blank" rel="noopener">Voir l'itinéraire &rarr;</a>
+                            <b data-he="בית הכנסת היכל אברהם">Synagogue Hechal Avraham</b>
+                            <span data-he="רחוב שמעון 4, בקעה, ירושלים">4 Rehov Shimon, Baka, Jérusalem</span><br>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Hechal+Avraham+4+Shimon+Street+Baka+Jerusalem" target="_blank" rel="noopener" data-he="לניווט &larr;">Voir l'itinéraire &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -422,8 +456,8 @@
         </section>
 
         <footer>
-            Bar Mitzvah de Noam Moshe · 2027
-            <p class="credit">Créé avec Simha Studio</p>
+            <span data-he="בר המצווה של נועם משה · 2027">Bar Mitzvah de Noam Moshe · 2027</span>
+            <p class="credit" data-he="נוצר עם Simha Studio">Créé avec Simha Studio</p>
         </footer>
     </main>
 
@@ -455,6 +489,47 @@
             }
         }
         setupInvitationMode();
+
+        // ===== LANGUE (français / hébreu) =====
+        let LANG = 'fr';
+        const UI = {
+            fr: { sending: 'Envoi en cours...', sent: 'Réponse envoyée', error: 'Erreur, réessayez',
+                  muteOn: 'Couper la musique', muteOff: 'Remettre la musique', title: 'Bar Mitzvah de Noam Moshe' },
+            he: { sending: 'שולח...', sent: 'התשובה נשלחה', error: 'שגיאה, נסו שוב',
+                  muteOn: 'השתקת המוזיקה', muteOff: 'הפעלת המוזיקה', title: 'בר המצווה של נועם משה' }
+        };
+        function applyLang(lang) {
+            LANG = lang;
+            const he = lang === 'he';
+            document.documentElement.lang = he ? 'he' : 'fr';
+            document.documentElement.dir = he ? 'rtl' : 'ltr';
+            document.title = UI[lang].title;
+            document.querySelectorAll('[data-he]').forEach(el => {
+                if (el.dataset.fr === undefined) el.dataset.fr = el.innerHTML;
+                el.innerHTML = he ? el.dataset.he : el.dataset.fr;
+            });
+            document.querySelectorAll('[data-he-ph]').forEach(el => {
+                if (el.dataset.frPh === undefined) el.dataset.frPh = el.placeholder;
+                el.placeholder = he ? el.dataset.hePh : el.dataset.frPh;
+            });
+            document.querySelectorAll('[data-he-aria]').forEach(el => {
+                if (el.dataset.frAria === undefined) el.dataset.frAria = el.getAttribute('aria-label');
+                el.setAttribute('aria-label', he ? el.dataset.heAria : el.dataset.frAria);
+            });
+            const btn = document.getElementById('lang-toggle');
+            btn.innerHTML = he ? '<span class="off">FR</span><span class="sep">|</span>עב'
+                               : 'FR<span class="sep">|</span><span class="off">עב</span>';
+            btn.setAttribute('aria-label', he ? 'Français' : 'עברית');
+            const music = document.getElementById('music-toggle');
+            music.setAttribute('aria-label', music.classList.contains('muted') ? UI[lang].muteOff : UI[lang].muteOn);
+            try { localStorage.setItem('invitation-lang', lang); } catch (e) {}
+        }
+        function toggleLang() { applyLang(LANG === 'he' ? 'fr' : 'he'); }
+        (function initLang() {
+            let lang = new URLSearchParams(window.location.search).get('lang');
+            if (lang !== 'he' && lang !== 'fr') { try { lang = localStorage.getItem('invitation-lang'); } catch (e) {} }
+            applyLang(lang === 'he' ? 'he' : 'fr');
+        })();
 
         // --- Preloader ---
         const hideLoader = () => {
@@ -522,15 +597,15 @@
                 audio.muted = false;
                 audio.play().catch(() => {});
                 btn.classList.remove('muted');
-                btn.setAttribute('aria-label', 'Couper la musique');
+                btn.setAttribute('aria-label', UI[LANG].muteOn);
             } else if (audio.muted) {
                 audio.muted = false;
                 btn.classList.remove('muted');
-                btn.setAttribute('aria-label', 'Couper la musique');
+                btn.setAttribute('aria-label', UI[LANG].muteOn);
             } else {
                 audio.muted = true;
                 btn.classList.add('muted');
-                btn.setAttribute('aria-label', 'Remettre la musique');
+                btn.setAttribute('aria-label', UI[LANG].muteOff);
             }
         }
 
@@ -557,19 +632,19 @@
             const form = document.forms['submit-to-google-sheet'];
             const btn = form.querySelector('button');
             const originalText = btn.innerText;
-            btn.innerText = 'Envoi en cours...';
+            btn.innerText = UI[LANG].sending;
             btn.disabled = true;
 
             fetch(scriptURL, { method: 'POST', body: new FormData(form) })
                 .then(() => {
-                    btn.innerText = 'Réponse envoyée';
+                    btn.innerText = UI[LANG].sent;
                     document.getElementById('success-message').classList.remove('hidden');
                     form.reset();
                     toggleEvents(true);
                 })
                 .catch(error => {
                     console.error('Erreur :', error.message);
-                    btn.innerText = 'Erreur, réessayez';
+                    btn.innerText = UI[LANG].error;
                     btn.disabled = false;
                     setTimeout(() => { btn.innerText = originalText; }, 3000);
                 });
