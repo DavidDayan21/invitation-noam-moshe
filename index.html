@@ -186,6 +186,22 @@
         .closing { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--navy); font-size: 1.35rem; line-height: 1.45; margin: 36px auto 0; max-width: 560px; }
         .rsvp-by { margin-top: 26px; font-size: 0.9rem; opacity: 0.75; }
 
+        /* ============ MUSIQUE : bouton son ============ */
+        #music-toggle {
+            position: fixed; right: 18px; bottom: 18px; z-index: 60;
+            width: 48px; height: 48px; border-radius: 50%; padding: 0; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--paper); border: 1px solid var(--gold); color: var(--gold);
+            box-shadow: 0 4px 12px rgba(30, 50, 80, 0.15);
+            opacity: 0; pointer-events: none; transition: opacity 0.6s, transform 0.2s;
+        }
+        #music-toggle.visible { opacity: 1; pointer-events: auto; }
+        #music-toggle:active { transform: scale(0.94); }
+        #music-toggle svg { width: 20px; height: 20px; }
+        #music-toggle .icon-off { display: none; }
+        #music-toggle.muted .icon-on { display: none; }
+        #music-toggle.muted .icon-off { display: block; }
+
         #scroll-arrow {
             position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 40;
             width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -411,6 +427,14 @@
         </footer>
     </main>
 
+
+    <!-- ===== MUSIQUE (voir MUSIQUE_FICHIER dans le script) ===== -->
+    <audio id="bg-music" loop preload="none"></audio>
+    <button id="music-toggle" type="button" aria-label="Couper la musique" onclick="toggleMusic()">
+        <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="m16 9 6 6"/><path d="m22 9-6 6"/></svg>
+    </button>
+
     <script>
         // URL du script Google Apps Script qui envoie les réponses dans le Google Sheet
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxWUcgZMF-gWY5RjOaI-nMSUllI2KP7NU5iYSUrd5r_ntj_WxMA5mAkV6vsFJ9_6em6/exec';
@@ -459,12 +483,59 @@
             arrow.style.pointerEvents = hide ? 'none' : 'auto';
         });
 
+        // ===== MUSIQUE =====
+        // Pour activer : mettre le fichier dans le dossier audio/ et indiquer son nom ici,
+        // par ex. 'audio/musique.mp3'. Laisser vide = pas de musique, pas de bouton.
+        const MUSIQUE_FICHIER = '';
+        const MUSIQUE_DEBUT = 0;      // seconde à laquelle la musique commence (ex. 42)
+        const MUSIQUE_VOLUME = 0.8;   // volume final, de 0 à 1
+
+        function startMusic() {
+            if (!MUSIQUE_FICHIER) return;
+            const audio = document.getElementById('bg-music');
+            audio.src = MUSIQUE_FICHIER;
+            audio.volume = 0;
+            const begin = () => { try { audio.currentTime = MUSIQUE_DEBUT; } catch (e) {} };
+            audio.addEventListener('loadedmetadata', begin, { once: true });
+            audio.play().then(() => {
+                let v = 0;
+                const fade = setInterval(() => {
+                    v = Math.min(MUSIQUE_VOLUME, v + MUSIQUE_VOLUME / 20);
+                    audio.volume = v;
+                    if (v >= MUSIQUE_VOLUME) clearInterval(fade);
+                }, 100);
+            }).catch(() => {
+                document.getElementById('music-toggle').classList.add('muted');
+            });
+            document.getElementById('music-toggle').classList.add('visible');
+        }
+
+        function toggleMusic() {
+            const audio = document.getElementById('bg-music');
+            const btn = document.getElementById('music-toggle');
+            if (audio.paused) {
+                audio.muted = false;
+                audio.play().catch(() => {});
+                btn.classList.remove('muted');
+                btn.setAttribute('aria-label', 'Couper la musique');
+            } else if (audio.muted) {
+                audio.muted = false;
+                btn.classList.remove('muted');
+                btn.setAttribute('aria-label', 'Couper la musique');
+            } else {
+                audio.muted = true;
+                btn.classList.add('muted');
+                btn.setAttribute('aria-label', 'Remettre la musique');
+            }
+        }
+
         function openEnvelope() {
             const card = document.getElementById('card-preview');
             const startScreen = document.getElementById('start-screen');
             const main = document.getElementById('invitation-full');
 
             document.getElementById('instruction-text').style.opacity = '0';
+            startMusic();
             document.getElementById('flap').classList.add('open');
             setTimeout(() => card.classList.add('slide-out'), 600);
             setTimeout(() => card.classList.add('highlight'), 1400);
