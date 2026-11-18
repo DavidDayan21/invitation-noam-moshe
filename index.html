@@ -485,12 +485,13 @@
 
         // ===== MUSIQUE =====
         // Pour activer : mettre le fichier dans le dossier audio/ et indiquer son nom ici,
-        // par ex. 'audio/musique.mp3'. Laisser vide = pas de musique, pas de bouton.
+        // par ex. 'audio/musique.mp3'. Laisser vide = pas de musique (le bouton s'affiche quand même).
         const MUSIQUE_FICHIER = '';
         const MUSIQUE_DEBUT = 0;      // seconde à laquelle la musique commence (ex. 42)
         const MUSIQUE_VOLUME = 0.8;   // volume final, de 0 à 1
 
         function startMusic() {
+            document.getElementById('music-toggle').classList.add('visible');
             if (!MUSIQUE_FICHIER) return;
             const audio = document.getElementById('bg-music');
             audio.src = MUSIQUE_FICHIER;
@@ -513,6 +514,10 @@
         function toggleMusic() {
             const audio = document.getElementById('bg-music');
             const btn = document.getElementById('music-toggle');
+            if (!MUSIQUE_FICHIER) {
+                btn.classList.toggle('muted');
+                return;
+            }
             if (audio.paused) {
                 audio.muted = false;
                 audio.play().catch(() => {});

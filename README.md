@@ -37,4 +37,4 @@ Date · Nom · Prénom · Invités · Présence · Alya · Seouda · Message
 2. Dans `index.html`, renseigner `MUSIQUE_FICHIER = 'audio/nom-du-fichier.mp3'`.
 3. Optionnel : `MUSIQUE_DEBUT` (seconde de départ) et `MUSIQUE_VOLUME` (0 à 1).
 
-La musique démarre à l'ouverture de l'enveloppe, avec une montée progressive du volume, et le bouton rond en bas à droite permet de la couper ou de la remettre. Tant que `MUSIQUE_FICHIER` est vide, il n'y a ni musique ni bouton.
+La musique démarre à l'ouverture de l'enveloppe, avec une montée progressive du volume, et le bouton rond en bas à droite permet de la couper ou de la remettre. Tant que `MUSIQUE_FICHIER` est vide, le bouton s'affiche mais aucune musique ne joue.
