@@ -11,7 +11,7 @@
     <style>
         /* ============ PALETTE (inspirée du save the date) ============ */
         :root {
-            --cream: #f8efe5;
+            --cream: #fbf0e3;
             --paper: #fbf5ee;
             --navy: #3e4775;
             --gold: #c9a84c;
@@ -154,11 +154,17 @@
 
         .parents { color: var(--navy); font-size: 1.05rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; margin: 36px 0 8px; }
         .lead { color: var(--navy); font-size: 1.2rem; font-weight: 300; margin: 0 0 18px; line-height: 1.5; }
-        .name { font-size: clamp(3.4rem, 15vw, 7.5rem); margin: 0; }
+        .name { margin: 0; line-height: 0; }
+        .name img { width: min(560px, 92%); height: auto; }
         .sub { color: var(--navy); font-size: 1.25rem; font-weight: 300; margin: 18px 0 0; }
 
         .date-block { margin: 34px 0 0; }
-        .date-block .script { color: var(--gold); font-size: clamp(3rem, 11vw, 5rem); line-height: 0.8; display: block; }
+        .date-block .std { display: block; width: min(560px, 100%); height: auto; margin: 0 auto -6%; position: relative; z-index: 1; }
+        .date-block .date-big { position: relative; z-index: 0; }
+        .logo-top { display: block; width: 210px; height: auto; margin: 0 auto; }
+        @media (max-width: 550px) { .logo-top { width: 170px; } }
+        .seal.seal-logo { background: var(--paper); border: 2px solid var(--gold); overflow: hidden; }
+        .seal.seal-logo img { width: 100%; height: 100%; object-fit: cover; }
         .date-big { color: var(--navy); font-weight: 300; font-size: clamp(2.4rem, 9vw, 3.8rem); letter-spacing: 0.04em; margin: 0; }
         .date-he { color: var(--navy); font-size: 1.15rem; margin: 2px 0 0; }
 
@@ -246,18 +252,18 @@
     <!-- ===== ÉCRAN D'ACCUEIL : ENVELOPPE ===== -->
     <section id="start-screen">
         <div id="instruction-text">
-            <div class="monogram">NM</div>
+            <img class="logo-top" src="img/logo.jpg" alt="Bar Mitsva Noam Moshe">
             <p>Ouvrez l'invitation</p>
         </div>
 
         <div class="envelope-container" onclick="openEnvelope()">
             <div class="envelope">
                 <div class="envelope-back"></div>
-                <div class="flap" id="flap"><div class="seal">NM</div></div>
+                <div class="flap" id="flap"><div class="seal seal-logo"><img src="img/logo.jpg" alt=""></div></div>
                 <div class="card-preview" id="card-preview">
                     <div class="frame"></div>
                     <p style="margin:0 0 10px; color:var(--navy); font-size:12px; letter-spacing:.3em; text-transform:uppercase;">Bar Mitzvah</p>
-                    <div class="painted">Noam<br>Moshe</div>
+                    <img src="img/noam-moshe.png" alt="Noam Moshe" style="width:78%; height:auto;">
                     <p style="margin:14px 0 0; color:var(--navy); font-size:1.3rem; font-weight:300;">04.03.2027</p>
                 </div>
                 <div class="pocket"></div>
@@ -277,11 +283,11 @@
                 <p class="parents">Deborah et David Sellem</p>
                 <p class="lead">ont la joie de vous convier à la Bar Mitzvah de leur fils</p>
 
-                <h1 class="name painted">Noam<br>Moshe</h1>
+                <h1 class="name"><img src="img/noam-moshe.png" alt="Noam Moshe"></h1>
                 <p class="sub">qui montera à la Torah à Jérusalem</p>
 
                 <div class="date-block">
-                    <span class="script">Save the date</span>
+                    <img class="std" src="img/save-the-date.png" alt="Save the date">
                     <p class="date-big">04.03.2027</p>
                     <p class="date-he he">כ"ה באדר א' ה'תשפ"ז</p>
                 </div>
