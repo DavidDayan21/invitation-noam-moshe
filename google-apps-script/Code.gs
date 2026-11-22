@@ -37,6 +37,7 @@ function doPost(e) {
       return p[col] || '';
     });
     sheet.appendRow(row);
+    formatSheet(sheet);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ result: 'error', error: String(err) }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -49,6 +50,18 @@ function doPost(e) {
 
   return ContentService.createTextOutput(JSON.stringify({ result: 'success' }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Retour à la ligne automatique : chaque ligne s'agrandit pour afficher tout son contenu
+function formatSheet(sheet) {
+  sheet = sheet || SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+  const last = Math.max(sheet.getLastRow(), 2);
+  const range = sheet.getRange(1, 1, last, COLUMNS.length);
+  range.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setVerticalAlignment('top');
+  sheet.getRange(2, 1, last - 1, 1).setNumberFormat('dd/mm/yyyy hh:mm');
+  const widths = { 'Date': 130, 'Nom': 140, 'Prénom': 140, 'Invités': 70, 'Présence': 90, 'Alya': 80, 'Seouda': 90, 'Message': 320 };
+  COLUMNS.forEach((col, i) => sheet.setColumnWidth(i + 1, widths[col] || 120));
+  sheet.autoResizeRows(1, last);
 }
 
 function sendNotification(row) {

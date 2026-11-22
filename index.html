@@ -269,6 +269,9 @@
         #events-selection .hint { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin: 6px 0 10px; }
         .check { display: flex; gap: 12px; align-items: flex-start; padding: 6px 0; cursor: pointer; }
         .check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--teal); }
+        .check.single { cursor: default; }
+        .check.single input { display: none; }
+        #events-error { color: #b3261e; font-size: 0.95rem; margin: 4px 0 10px; }
         .check b { display: block; color: var(--navy); font-size: 0.95rem; }
         .check small { color: #9a9db0; }
 
@@ -428,6 +431,8 @@
                                 </label>
                             </div>
 
+                            <p id="events-error" class="hidden" role="alert" data-he="נא לסמן לפחות אירוע אחד.">Merci de cocher au moins un événement.</p>
+
                             <label class="choice">
                                 <input type="radio" name="Présence" value="Absent" onchange="toggleEvents(false)">
                                 <span style="font-weight:400;" data-he="לא אוכל להגיע">Je ne pourrai pas être présent(e)</span>
@@ -486,7 +491,14 @@
                 const hidden = document.createElement('input');
                 hidden.type = 'hidden'; hidden.name = 'Seouda'; hidden.value = 'Non invité';
                 form.appendChild(hidden);
+                // Un seul événement : pas de case à cocher, l'Alya est sélectionnée d'office
+                const alya = form.querySelector('input[name="Alya"]');
+                alya.checked = true;
+                alya.closest('label').classList.add('single');
+                alya.addEventListener('click', e => e.preventDefault());
             }
+            form.querySelectorAll('#events-selection input[type="checkbox"]').forEach(cb =>
+                cb.addEventListener('change', () => document.getElementById('events-error').classList.add('hidden')));
         }
         setupInvitationMode();
 
@@ -543,6 +555,7 @@
         setTimeout(hideLoader, 3000);
 
         function toggleEvents(isPresent) {
+            document.getElementById('events-error').classList.add('hidden');
             const container = document.getElementById('events-selection');
             container.style.maxHeight = isPresent ? '400px' : '0';
             container.style.opacity = isPresent ? '1' : '0';
@@ -630,6 +643,15 @@
         function submitForm(event) {
             event.preventDefault();
             const form = document.forms['submit-to-google-sheet'];
+            const present = form.querySelector('input[name="Présence"]:checked').value === 'Présent';
+            const chosen = [...form.querySelectorAll('#events-selection input[type="checkbox"]')].some(cb => cb.checked && !cb.disabled);
+            const err = document.getElementById('events-error');
+            if (present && !chosen) {
+                err.classList.remove('hidden');
+                err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            err.classList.add('hidden');
             const btn = form.querySelector('button');
             const originalText = btn.innerText;
             btn.innerText = UI[LANG].sending;
