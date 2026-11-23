@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bar Mitzvah de Noam Moshe</title>
+    <link rel="preload" as="image" href="img/noam-moshe-he.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@800;900&family=Allison&family=Allura&family=Frank+Ruhl+Libre:wght@400;500;700&display=swap" rel="stylesheet">
@@ -212,6 +213,8 @@
         html[lang="he"] .rsvp-title h2 { font-size: 2.6rem; font-weight: 700; line-height: 1.2; }
         html[lang="he"] .lead, html[lang="he"] .sub { font-size: 1.3rem; }
         html[lang="he"] .verse-fr:empty { display: none; }
+        html[lang="he"] .name img { width: min(400px, 72%); }
+        html[lang="he"] .name-preview { width: 58% !important; }
         html[lang="he"] .ltr { direction: ltr; unicode-bidi: isolate; }
         @media (max-width: 550px) { html[lang="he"] .parents { font-size: 1.9rem; } }
         #events-selection { margin-inline-start: 8px !important; margin-left: 0; padding-left: 0; border-left: 0; padding-inline-start: 18px; border-inline-start: 2px solid var(--gold); }
@@ -320,7 +323,7 @@
                 <div class="card-preview" id="card-preview">
                     <div class="frame"></div>
                     <p style="margin:0 0 10px; color:var(--navy); font-size:12px; letter-spacing:.3em; text-transform:uppercase;" class="preview-label" data-he="בר מצווה">Bar Mitzvah</p>
-                    <img src="img/noam-moshe.png" alt="Noam Moshe" style="width:78%; height:auto;">
+                    <img src="img/noam-moshe.png" data-he-src="img/noam-moshe-he.png" alt="Noam Moshe" class="name-preview" style="width:78%; height:auto;">
                     <p style="margin:14px 0 0; color:var(--navy); font-size:1.3rem; font-weight:300;">04.03.2027</p>
                 </div>
                 <div class="pocket"></div>
@@ -340,7 +343,7 @@
                 <p class="parents" data-he="דבורה ודוד סלם">Deborah et David Sellem</p>
                 <p class="lead" data-he="שמחים להזמינכם לבר המצווה של בנם">ont la joie de vous convier à la Bar Mitzvah de leur fils</p>
 
-                <h1 class="name"><img src="img/noam-moshe.png" alt="Noam Moshe"></h1>
+                <h1 class="name"><img src="img/noam-moshe.png" data-he-src="img/noam-moshe-he.png" alt="Noam Moshe"></h1>
                 <p class="sub" data-he="שיעלה לתורה בירושלים">qui montera à la Torah à Jérusalem</p>
 
                 <div class="date-block">
@@ -523,6 +526,11 @@
             document.querySelectorAll('[data-he-ph]').forEach(el => {
                 if (el.dataset.frPh === undefined) el.dataset.frPh = el.placeholder;
                 el.placeholder = he ? el.dataset.hePh : el.dataset.frPh;
+            });
+            document.querySelectorAll('[data-he-src]').forEach(el => {
+                if (el.dataset.frSrc === undefined) el.dataset.frSrc = el.getAttribute('src');
+                el.setAttribute('src', he ? el.dataset.heSrc : el.dataset.frSrc);
+                el.alt = he ? 'נועם משה' : 'Noam Moshe';
             });
             document.querySelectorAll('[data-he-aria]').forEach(el => {
                 if (el.dataset.frAria === undefined) el.dataset.frAria = el.getAttribute('aria-label');
