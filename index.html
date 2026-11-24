@@ -7,7 +7,7 @@
     <link rel="preload" as="image" href="img/noam-moshe-he.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@800;900&family=Allison&family=Allura&family=Frank+Ruhl+Libre:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@800;900&family=Allison&family=Allura&family=Frank+Ruhl+Libre:wght@400;500;700&family=Noto+Serif+Hebrew:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         /* ============ PALETTE (inspirée du save the date) ============ */
@@ -202,7 +202,9 @@
         html[lang="he"] body,
         html[lang="he"] .closing, html[lang="he"] .event h3, html[lang="he"] .rsvp-title h2,
         html[lang="he"] .parents, html[lang="he"] .btn, html[lang="he"] .form-input,
-        html[lang="he"] .verse-fr { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; }
+        html[lang="he"] .verse-fr { font-family: 'Noto Serif Hebrew', 'Frank Ruhl Libre', serif; }
+        html[lang="he"] { font-size: 18.5px; }
+        html[lang="he"] body { font-size: 21px; }
         html[lang="he"] .event h3, html[lang="he"] .event .when, html[lang="he"] .field label,
         html[lang="he"] .group-label, html[lang="he"] #events-selection .hint, html[lang="he"] footer,
         html[lang="he"] #instruction-text p, html[lang="he"] .loader-text, html[lang="he"] .btn,
@@ -220,6 +222,9 @@
         #events-selection { margin-inline-start: 8px !important; margin-left: 0; padding-left: 0; border-left: 0; padding-inline-start: 18px; border-inline-start: 2px solid var(--gold); }
         .map-card { border-left: 0 !important; border-inline-start: 4px solid var(--gold); }
 
+        .nav-links { margin: 8px 0 0; font-size: 0.85rem; }
+        .nav-links a { color: var(--teal); text-decoration: none; font-weight: 600; letter-spacing: 0.06em; margin: 0 8px; white-space: nowrap; }
+        .nav-links a:hover { text-decoration: underline; }
         /* ============ MUSIQUE : bouton son ============ */
         #music-toggle {
             position: fixed; right: 18px; bottom: 18px; z-index: 60;
@@ -359,6 +364,7 @@
                         <p class="time script" data-he="9:00">9h00</p>
                         <p class="place" data-he="בית הכנסת היכל אברהם של הרב אברג'ל">Synagogue Hechal Avraham du Rav Abergel</p>
                         <p class="address" data-he="רחוב שמעון 4, בקעה, ירושלים">4 Rehov Shimon, Baka, Jérusalem</p>
+                        <p class="nav-links"><a href="https://www.google.com/maps/search/?api=1&query=Hechal+Avraham+4+Shimon+Street+Baka+Jerusalem" target="_blank" rel="noopener">Google Maps</a><a href="https://waze.com/ul?q=4%20Shimon%20Street%2C%20Jerusalem&navigate=yes" target="_blank" rel="noopener">Waze</a></p>
                     </div>
 
                     <!-- Visible uniquement avec le lien ?soiree=oui -->
@@ -369,6 +375,7 @@
                         <p class="time script" data-he="19:30">19h30</p>
                         <p class="place" data-he="מסעדת-אולם עפרה">Restaurant-salle Ofra</p>
                         <p class="address" data-he="<span class=&quot;ltr&quot;>16 Rehov Ha-Aparsa</span>, תלפיות, ירושלים">16 Rehov Ha-Aparsa, Talpiot, Jérusalem</p>
+                        <p class="nav-links"><a href="https://www.google.com/maps/search/?api=1&query=Ofra+16+Ha-Aparsa+Talpiot+Jerusalem" target="_blank" rel="noopener">Google Maps</a><a href="https://waze.com/ul?q=16%20Ha-Aparsa%2C%20Talpiot%2C%20Jerusalem&navigate=yes" target="_blank" rel="noopener">Waze</a></p>
                         <p class="note" data-he="לרקוד ולחגוג יחד!<br><b>קוד לבוש: לבוש ערב / קוקטייל – חובה</b>">Pour danser et se réunir !<br><b>Dress code : tenue de soirée cocktail obligatoire</b></p>
                         <p class="note" data-he="אנו מקווים מכל הלב שתוכלו כולכם להיות לצידנו ולחלוק איתנו את הרגעים היקרים האלה, המלאים בשמחה, בהתרגשות ובאושר משפחתי.">Nous espérons de tout cœur que vous pourrez tous être réunis autour de nous pour partager ces moments précieux, remplis de joie, d'émotion et de bonheur familial.</p>
                     </div>
@@ -456,7 +463,8 @@
                         <div class="map-card">
                             <b data-he="בית הכנסת היכל אברהם">Synagogue Hechal Avraham</b>
                             <span data-he="רחוב שמעון 4, בקעה, ירושלים">4 Rehov Shimon, Baka, Jérusalem</span><br>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Hechal+Avraham+4+Shimon+Street+Baka+Jerusalem" target="_blank" rel="noopener" data-he="לניווט &larr;">Voir l'itinéraire &rarr;</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Hechal+Avraham+4+Shimon+Street+Baka+Jerusalem" target="_blank" rel="noopener" data-he="Google Maps &larr;">Google Maps &rarr;</a>
+                            <a href="https://waze.com/ul?q=4%20Shimon%20Street%2C%20Jerusalem&navigate=yes" target="_blank" rel="noopener" style="margin-inline-start:16px;" data-he="Waze &larr;">Waze &rarr;</a>
                         </div>
                     </div>
                 </div>
